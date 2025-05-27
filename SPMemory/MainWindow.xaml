@@ -12,6 +12,16 @@
 		<vms:MainWindowViewModel />
 	</Window.DataContext>
     <Grid>
-		<controls:MemoryBoard MemoryCards="{Binding Test}" NumCardsHorizontal="{Binding NumCardsHorizontal}" />
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<controls:MemoryBoard MemoryCards="{Binding Test}" NumCardsHorizontal="{Binding NumCardsHorizontal}" Grid.Column="1" Grid.Row="1"/>
 	</Grid>
 </Window>

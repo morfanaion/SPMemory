@@ -10,6 +10,12 @@ namespace SPMemory.Controls
 	/// </summary>
 	public partial class MemoryBoard : UserControl, INotifyPropertyChanged
 	{
+		public class CardRecord(int idx, MemoryCard card)
+		{
+			public int Idx { get; set; } = idx;
+			public MemoryCard Card { get; set; } = card;
+		}
+
 		public MemoryBoard()
 		{
 			InitializeComponent();
@@ -43,7 +49,7 @@ namespace SPMemory.Controls
 			set => SetValue(NumCardsHorizontalProperty, value);
 		}
 
-		public IEnumerable<IEnumerable<MemoryCard>> PlayingGrid
+		public IEnumerable<IEnumerable<CardRecord>> PlayingGrid
 		{
 			get
 			{
@@ -53,7 +59,7 @@ namespace SPMemory.Controls
 				}
 				for(int i = 0; i < MemoryCards.Count; i+= NumCardsHorizontal)
 				{
-					yield return MemoryCards.Skip(i).Take(NumCardsHorizontal);
+					yield return MemoryCards.Skip(i).Take(NumCardsHorizontal).Zip(Enumerable.Range(i, NumCardsHorizontal)).Select(pair => new CardRecord(pair.Second, pair.First));
 				}
 			}
 		}
@@ -61,6 +67,12 @@ namespace SPMemory.Controls
 		protected void RaisePropertyChanged(string propertyName)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			MemoryCard card = ((CardRecord)((Button)sender).DataContext).Card;
+			card.Open = !card.Open;
 		}
 	}
 }

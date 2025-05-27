@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace SPMemory.Classes
 {
-	internal class BaseNotifier : INotifyPropertyChanged
+	public class BaseNotifier : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -18,7 +18,18 @@
 					</ItemsControl.ItemsPanel>
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<Label Content="X" />
+							<Button Click="Button_Click" Margin="10">
+								<Button.Content>
+									<Image Width="100" Height="100">
+										<Image.Source>
+											<MultiBinding Converter="{StaticResource convMemoryCardToBitmap}">
+												<Binding Path="Card.CardPairId" />
+												<Binding Path="Card.Open" />
+											</MultiBinding>
+										</Image.Source>
+									</Image>
+								</Button.Content>
+							</Button>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>

@@ -8,4 +8,52 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\MemoryCards\Back.png" />
+    <None Remove="Resources\MemoryCards\Image01.png" />
+    <None Remove="Resources\MemoryCards\Image02.png" />
+    <None Remove="Resources\MemoryCards\Image03.png" />
+    <None Remove="Resources\MemoryCards\Image04.png" />
+    <None Remove="Resources\MemoryCards\Image05.png" />
+    <None Remove="Resources\MemoryCards\Image06.png" />
+    <None Remove="Resources\MemoryCards\Image07.png" />
+    <None Remove="Resources\MemoryCards\Image08.png" />
+    <None Remove="Resources\MemoryCards\Image09.png" />
+    <None Remove="Resources\MemoryCards\Image10.png" />
+    <None Remove="Resources\MemoryCards\Image11.png" />
+    <None Remove="Resources\MemoryCards\Image12.png" />
+    <None Remove="Resources\MemoryCards\Image13.png" />
+    <None Remove="Resources\MemoryCards\Image14.png" />
+    <None Remove="Resources\MemoryCards\Image15.png" />
+    <None Remove="Resources\MemoryCards\Image16.png" />
+    <None Remove="Resources\MemoryCards\Image17.png" />
+    <None Remove="Resources\MemoryCards\Image18.png" />
+    <None Remove="Resources\MemoryCards\Image19.png" />
+    <None Remove="Resources\MemoryCards\Image20.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\MemoryCards\Back.png" />
+    <Resource Include="Resources\MemoryCards\Image01.png" />
+    <Resource Include="Resources\MemoryCards\Image02.png" />
+    <Resource Include="Resources\MemoryCards\Image03.png" />
+    <Resource Include="Resources\MemoryCards\Image04.png" />
+    <Resource Include="Resources\MemoryCards\Image05.png" />
+    <Resource Include="Resources\MemoryCards\Image06.png" />
+    <Resource Include="Resources\MemoryCards\Image07.png" />
+    <Resource Include="Resources\MemoryCards\Image08.png" />
+    <Resource Include="Resources\MemoryCards\Image09.png" />
+    <Resource Include="Resources\MemoryCards\Image10.png" />
+    <Resource Include="Resources\MemoryCards\Image11.png" />
+    <Resource Include="Resources\MemoryCards\Image12.png" />
+    <Resource Include="Resources\MemoryCards\Image13.png" />
+    <Resource Include="Resources\MemoryCards\Image14.png" />
+    <Resource Include="Resources\MemoryCards\Image15.png" />
+    <Resource Include="Resources\MemoryCards\Image16.png" />
+    <Resource Include="Resources\MemoryCards\Image17.png" />
+    <Resource Include="Resources\MemoryCards\Image18.png" />
+    <Resource Include="Resources\MemoryCards\Image19.png" />
+    <Resource Include="Resources\MemoryCards\Image20.png" />
+  </ItemGroup>
+
 </Project>
