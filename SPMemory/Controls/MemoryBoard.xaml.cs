@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SPMemory.Controls
 {
@@ -24,6 +25,7 @@ namespace SPMemory.Controls
 
 		public static DependencyProperty MemoryCardsProperty = DependencyProperty.Register(nameof(MemoryCards), typeof(List<MemoryCard>), typeof(MemoryBoard), new PropertyMetadata() { PropertyChangedCallback = MemoryCardsChangedCallback } );
 		public static DependencyProperty NumCardsHorizontalProperty = DependencyProperty.Register(nameof(NumCardsHorizontal), typeof(int), typeof(MemoryBoard), new PropertyMetadata() { PropertyChangedCallback = NumCardsHorizontalChangedCallback });
+		public static DependencyProperty CardClickedCommandProperty = DependencyProperty.Register(nameof(CardClickedCommand), typeof(ICommand), typeof(MemoryBoard));
 
 		public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -35,6 +37,12 @@ namespace SPMemory.Controls
 		private static void NumCardsHorizontalChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
 			((MemoryBoard)d).RaisePropertyChanged(nameof(PlayingGrid));
+		}
+
+		public ICommand CardClickedCommand
+		{
+			get => (ICommand)GetValue(CardClickedCommandProperty);
+			set => SetValue(CardClickedCommandProperty, value);
 		}
 
 		public List<MemoryCard> MemoryCards
@@ -71,8 +79,7 @@ namespace SPMemory.Controls
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			MemoryCard card = ((CardRecord)((Button)sender).DataContext).Card;
-			card.Open = !card.Open;
+			CardClickedCommand?.Execute(((CardRecord)((Button)sender).DataContext).Idx);
 		}
 	}
 }
