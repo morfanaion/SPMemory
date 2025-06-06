@@ -4,24 +4,63 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				xmlns:controls="clr-namespace:SPMemory.Controls"
+        xmlns:conv="clr-namespace:SPMemory.Converters"
         xmlns:local="clr-namespace:SPMemory"
 				xmlns:vms="clr-namespace:SPMemory.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" x:Name="TheWindow">
 	<Window.DataContext>
 		<vms:MainWindowViewModel />
 	</Window.DataContext>
-    <Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" />
-			<ColumnDefinition Width="Auto" />
-			<ColumnDefinition Width="*" />
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-		</Grid.RowDefinitions>
-		<controls:MemoryBoard MemoryCards="{Binding Test}" NumCardsHorizontal="{Binding NumCardsHorizontal}" Grid.Column="1" Grid.Row="1"/>
-	</Grid>
+    <Window.Resources>
+        <ResourceDictionary>
+            <conv:CurrentPlayerToVisibilityConverter x:Key="convPlayerIsActivePlayerVisibility" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_New Game" Command="{Binding NewGameCommand}" />
+        </Menu>
+        
+        <Grid DockPanel.Dock="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1">
+                <ItemsControl ItemsSource="{Binding Players}" Grid.IsSharedSizeScope="True" >
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="Black" BorderThickness="3">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="ActivePlayerIndicator" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="PlayerName" />
+                                        <ColumnDefinition Width="30" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Content="*">
+                                        <Label.Visibility>
+                                            <MultiBinding Converter="{StaticResource convPlayerIsActivePlayerVisibility}">
+                                                <Binding />
+                                                <Binding Path="DataContext.CurrentPlayer" Source="{x:Reference TheWindow}" />
+                                            </MultiBinding>
+                                        </Label.Visibility>
+                                    </Label>
+                                    <Label Content="{Binding Name}" Grid.Column="1" />
+                                    <Label Content="{Binding Score}" Grid.Column="2" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <controls:MemoryBoard MemoryCards="{Binding MemoryCardsList}" NumCardsHorizontal="{Binding NumCardsHorizontal}" CardClickedCommand="{Binding ClickCardCommand}" Grid.Column="1" Grid.Row="1"/>
+        </Grid>
+    </DockPanel>
 </Window>
