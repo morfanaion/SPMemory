@@ -23,14 +23,56 @@ namespace SPMemory.ViewModels
 				}
 				MemoryCardsList[args.Idx].Open = true;
 				_openedCards.Add(MemoryCardsList[args.Idx]);
+				MessengerService.Instance.SendMessage(this, new CardOpenedMessage() { CardIdx = args.Idx, PairIdx = MemoryCardsList[args.Idx].CardPairId });
 				if (_openedCards.Count == 2)
 				{
                     CurrentPlayer.EndTurn();
 					if (_openedCards[0].CardPairId == _openedCards[1].CardPairId)
 					{
+						PairFoundMessage message = new PairFoundMessage() { CardIdx1 = -1};
+						for (int i = 0; i < MemoryCardsList.Count; i++)
+						{
+							if (MemoryCardsList[i].CardPairId == _openedCards[0].CardPairId)
+							{
+								if(message.CardIdx1 == -1)
+								{
+									message.CardIdx1 = i;
+								}
+								else
+								{
+									message.CardIdx2 = i;
+									break;
+								}
+							}
+						}
+						MessengerService.Instance.SendMessage(this, message);
                         // add to score, start turn
                         CurrentPlayer.Score++;
-                        CurrentPlayer.StartTurn();
+						if(MemoryCardsList.Any(c => !c.Open))
+						{
+							CurrentPlayer.StartTurn();
+						}
+						else
+						{
+							string endOfGameMessage = $"Game is over!" + Environment.NewLine +
+							Environment.NewLine +
+							string.Join(Environment.NewLine, Players.Select(p => $"{p.Name}: {p.Score}")) + Environment.NewLine +
+							Environment.NewLine;
+
+							int maxScore = Players.Max(p => p.Score);
+							IEnumerable<IPlayer> winners = Players.Where(p => p.Score == maxScore);
+							if(winners.Skip(1).Any())
+							{
+								string winnersString = string.Join(", ", winners.Select(p => p.Name));
+								winnersString = winnersString.Substring(0, winnersString.LastIndexOf(',')) + " and" + winnersString.Substring(winnersString.LastIndexOf(',') + 1);
+								endOfGameMessage += $"Players {winnersString} are tied for first place!";
+							}
+							else
+							{
+								endOfGameMessage += $"{winners.First().Name} is the winner!";
+							}
+							MessageBox.Show(endOfGameMessage);
+						}
 						_openedCards.Clear();
 					}
 					else
@@ -47,9 +89,22 @@ namespace SPMemory.ViewModels
         private void NewGameCommandExecute()
         {
 			Players.Clear();
-			Players.Add(new HumanPlayer() { PlayerId = 1, Name = "André" });
-            Players.Add(new HumanPlayer() { PlayerId = 2, Name = "Pietertje" });
-            MemoryCardsList = Enumerable.Range(0, 20).Concat(Enumerable.Range(0, 20)).Select(n => new { OrderNr = new Random().Next(), CardPairId = n }).OrderBy(p => p.OrderNr).Select(p => new MemoryCard() { CardPairId = p.CardPairId, Open = false }).ToList();
+			//Players.Add(new HumanPlayer() { PlayerId = 1, Name = "André" });
+			IPlayer cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Hard, 40);
+			cpuPlayer.Name = "Hard player";
+			cpuPlayer.PlayerId = 1;
+			Players.Add(cpuPlayer);
+			cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Medium, 40);
+			cpuPlayer.Name = "Medium player";
+			cpuPlayer.PlayerId = 2;
+			Players.Add(cpuPlayer);
+			cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Easy, 40);
+			cpuPlayer.Name = "Easy player";
+			cpuPlayer.PlayerId = 3;
+			Players.Add(cpuPlayer); cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Nitwit, 40);
+			cpuPlayer.Name = "Nitwit player";
+			cpuPlayer.PlayerId = 4;
+			Players.Add(cpuPlayer); MemoryCardsList = Enumerable.Range(0, 20).Concat(Enumerable.Range(0, 20)).Select(n => new { OrderNr = new Random().Next(), CardPairId = n }).OrderBy(p => p.OrderNr).Select(p => new MemoryCard() { CardPairId = p.CardPairId, Open = false }).ToList();
             CurrentPlayer.StartTurn();
         }
 

@@ -7,7 +7,7 @@
         private static MessengerService? _instance = null;
         public static MessengerService Instance => _instance ??= new MessengerService();
 
-        public Dictionary<Type, Dictionary<object, object>> Subscriptions { get; } = new Dictionary<Type, Dictionary<object, object>>();
+        private Dictionary<Type, Dictionary<object, object>> Subscriptions { get; } = new Dictionary<Type, Dictionary<object, object>>();
 
         public void Subscribe<TMessage>(object subscriber, Action<object, TMessage> processMessage)
         {
