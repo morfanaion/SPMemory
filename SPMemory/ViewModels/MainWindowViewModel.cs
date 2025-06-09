@@ -1,4 +1,5 @@
 ﻿using SPMemory.Classes;
+using SPMemory.Enums;
 using SPMemory.Messaging;
 using SPMemory.Models;
 using System.Collections.ObjectModel;
@@ -88,24 +89,40 @@ namespace SPMemory.ViewModels
 
         private void NewGameCommandExecute()
         {
-			Players.Clear();
-			//Players.Add(new HumanPlayer() { PlayerId = 1, Name = "André" });
-			IPlayer cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Hard, 40);
-			cpuPlayer.Name = "Hard player";
-			cpuPlayer.PlayerId = 1;
-			Players.Add(cpuPlayer);
-			cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Medium, 40);
-			cpuPlayer.Name = "Medium player";
-			cpuPlayer.PlayerId = 2;
-			Players.Add(cpuPlayer);
-			cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Easy, 40);
-			cpuPlayer.Name = "Easy player";
-			cpuPlayer.PlayerId = 3;
-			Players.Add(cpuPlayer); cpuPlayer = CpuPlayer.CreatePlayerForDifficulty(CpuPlayer.DifficultyLevel.Nitwit, 40);
-			cpuPlayer.Name = "Nitwit player";
-			cpuPlayer.PlayerId = 4;
-			Players.Add(cpuPlayer); MemoryCardsList = Enumerable.Range(0, 20).Concat(Enumerable.Range(0, 20)).Select(n => new { OrderNr = new Random().Next(), CardPairId = n }).OrderBy(p => p.OrderNr).Select(p => new MemoryCard() { CardPairId = p.CardPairId, Open = false }).ToList();
-            CurrentPlayer.StartTurn();
+			NewGameView newGameView = new NewGameView()
+			{
+				ViewModel = new NewGameViewModel()
+			};
+			if(newGameView.ShowDialog() ?? false)
+			{
+				foreach(IDisposable disposable in Players)
+				{
+					disposable.Dispose();
+				}
+
+				Players.Clear();
+				int nextPlayerId = 1;
+				foreach (PlayerDefinition player in newGameView.ViewModel.Players)
+				{
+					IPlayer newPlayer;
+					switch (player.PlayerType)
+					{
+						case PlayerType.Human:
+							newPlayer = new HumanPlayer() { Name = player.Name, PlayerId = nextPlayerId++, Score = 0 };
+							Players.Add(newPlayer);
+							break;
+						case PlayerType.Cpu:
+							newPlayer = CpuPlayer.CreatePlayerForDifficulty(player.DifficultyLevel, 40);
+							newPlayer.Name = player.Name;
+							newPlayer.PlayerId = nextPlayerId++;
+							Players.Add(newPlayer);
+							break;
+					}
+				}
+				MemoryCardsList = Enumerable.Range(0, 20).Concat(Enumerable.Range(0, 20)).Select(n => new { OrderNr = new Random().Next(), CardPairId = n }).OrderBy(p => p.OrderNr).Select(p => new MemoryCard() { CardPairId = p.CardPairId, Open = false }).ToList();
+				ActivePlayerIdx = 0;
+				CurrentPlayer.StartTurn();
+			}
         }
 
         public List<MemoryCard> _openedCards = new List<MemoryCard>();

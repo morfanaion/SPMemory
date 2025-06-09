@@ -1,19 +1,11 @@
-﻿using SPMemory.Messaging;
+﻿using SPMemory.Enums;
+using SPMemory.Messaging;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace SPMemory.Classes
 {
-	internal class CpuPlayer : BaseNotifier, IPlayer, IDisposable
+	public class CpuPlayer : BaseNotifier, IPlayer, IDisposable
 	{
-		public enum DifficultyLevel
-		{
-			Nitwit = 1,
-			Easy = 3,
-			Medium = 10,
-			Hard = 20
-		}
-
 		private List<(int cardIdx, int pairIdx)> SeenCards { get; }
 		private int MemoryBufferSize { get; }
 		public int PlayerId { get; set; }
